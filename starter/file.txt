@@ -1,0 +1,20 @@
+Summary of commands needed to correctly run JNI
+
+
+# 1. Ensure JAVA_HOME is set (Only needed once)
+
+
+
+export JAVA_HOME=$(/usr/libexec/java_home)
+
+# 2. Compile Java and generate JNI header
+javac -h . SpaceTravel.java
+
+# 3. Compile C++ JNI library for macOS x86_64
+g++ -shared -o libSpaceTravel.dylib -arch x86_64 -fPIC \
+  -I"$JAVA_HOME/include" \
+  -I"$JAVA_HOME/include/darwin" \
+  SpaceTravel.cpp
+
+# 4. Run the Java program with the correct library path
+java -Djava.library.path=$(pwd) SpaceTravel
